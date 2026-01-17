@@ -1,0 +1,275 @@
+<?php 
+include 'db_config.php';
+session_start();
+
+// Ürünleri Çek
+$yeni_gelenler = $conn->query("SELECT * FROM tbl_urunler ORDER BY urun_id DESC LIMIT 8");
+$tshirtler = $conn->query("SELECT * FROM tbl_urunler WHERE kategori = 'T-Shirt' ORDER BY RAND() LIMIT 4");
+
+// Sepet Sayısı
+$sepet_sayisi = 0;
+if(isset($_SESSION['sepet'])) {
+    foreach($_SESSION['sepet'] as $item) $sepet_sayisi += $item['adet'];
+}
+?>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FORSY GİYİM | URBAN STREETWEAR</title>
+    <!-- CSS Kütüphaneleri -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --accent: #E84D35; --dark: #050505; --gray: #f4f4f4; }
+        body { font-family: 'Roboto', sans-serif; overflow-x: hidden; background: #fff; color: #111; }
+        h1, h2, h3, h4, h5 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        /* NAVBAR */
+        .navbar { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 20px 50px; border-bottom: 1px solid #eee; }
+        .nav-link { font-weight: 700; text-transform: uppercase; font-size: 14px; margin: 0 15px; position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--accent); transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .brand { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
+        
+        /* HERO SECTION */
+        .hero { height: 90vh; background: #000; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .hero-video { position: absolute; top:0; left:0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
+        .hero-content { position: relative; z-index: 2; text-align: center; color: #fff; }
+        .hero h1 { font-size: 120px; font-weight: 900; line-height: 0.9; margin-bottom: 20px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hero p { font-size: 24px; font-weight: 300; letter-spacing: 5px; margin-bottom: 40px; }
+        .btn-hero { padding: 15px 50px; background: #fff; color: #000; font-weight: bold; border: none; font-size: 16px; text-transform: uppercase; letter-spacing: 2px; }
+        .btn-hero:hover { background: var(--accent); color: #fff; }
+
+        /* KATEGORİ VİTRİNİ */
+        .cat-card { position: relative; height: 500px; overflow: hidden; }
+        .cat-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s; }
+        .cat-card:hover img { transform: scale(1.1); filter: brightness(0.7); }
+        .cat-content { position: absolute; bottom: 30px; left: 30px; color: #fff; z-index: 2; }
+        .cat-number { font-size: 80px; font-weight: 900; opacity: 0.2; line-height: 0.8; font-family: 'Oswald'; }
+        .cat-title { font-size: 40px; font-weight: 700; }
+        
+        /* ÜRÜN KARTI */
+        .product-card { position: relative; margin-bottom: 40px; cursor: pointer; }
+        .product-img { position: relative; height: 450px; overflow: hidden; background: #f4f4f4; }
+        .product-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .product-card:hover .main-img { opacity: 0; }
+        .product-card:hover .hover-img { opacity: 1; transform: scale(1.05); }
+        .hover-img { position: absolute; top: 0; left: 0; opacity: 0; }
+        .product-info { padding: 20px 0; text-align: center; }
+        .product-title { font-size: 16px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .product-price { font-size: 18px; color: #000; font-family: 'Oswald'; }
+        
+        /* BANNER */
+        .banner { height: 600px; background: fixed url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop') center/cover; display: flex; align-items: center; justify-content: flex-end; padding-right: 100px; }
+        .banner-box { background: #fff; padding: 50px; max-width: 500px; border-left: 5px solid var(--accent); }
+        
+        /* FOOTER */
+        footer { background: #0e0e0e; color: #fff; padding: 80px 0; }
+        .footer-link { display: block; color: #888; font-size: 14px; margin-bottom: 10px; }
+        .footer-link:hover { color: #fff; padding-left: 5px; }
+        .newsletter input { background: #222; border: none; padding: 15px; width: 100%; color: #fff; margin-bottom: 10px; }
+        .newsletter button { width: 100%; padding: 15px; background: var(--accent); border: none; font-weight: bold; color: #fff; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar fixed-top">
+    <div class="d-flex align-items-center">
+        <a href="index.php" class="brand">FORSY<span style="color:var(--accent)">.</span></a>
+        <div class="d-none d-md-flex ms-5">
+            <a href="kategori.php?k=T-Shirt" class="nav-link">KOLEKSİYON</a>
+            <a href="kategori.php?k=Eşofman Altı" class="nav-link">EŞOFMAN</a>
+            <a href="#" class="nav-link">AKSESUAR</a>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-4">
+        <?php if(isset($_SESSION['kullanici_id'])): ?>
+            <div class="dropdown">
+                <a href="#" class="nav-link m-0" data-bs-toggle="dropdown">HESABIM</a>
+                <ul class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow">
+                    <li><a class="dropdown-item small py-2" href="#">SİPARİŞLERİM</a></li>
+                    <li><a class="dropdown-item small py-2 text-danger" href="logout.php">ÇIKIŞ YAP</a></li>
+                </ul>
+            </div>
+        <?php else: ?>
+            <a href="login.php" class="nav-link m-0">GİRİŞ</a>
+        <?php endif; ?>
+        
+        <a href="sepet.php" class="position-relative text-black">
+            <i class="fa fa-shopping-bag fa-lg"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:10px;">
+                <?= $sepet_sayisi ?>
+            </span>
+        </a>
+        
+        <?php if(isset($_SESSION['admin_id'])): ?>
+            <a href="admin_panel.php" class="btn btn-sm btn-dark rounded-0 px-3 ms-2">PANEL</a>
+        <?php endif; ?>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <!-- Premium Slider Görseli -->
+    <div style="background:linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop') center/cover; position:absolute; width:100%; height:100%;"></div>
+    
+    <div class="hero-content" data-aos="fade-up">
+        <p>SEZON 2026 / YENİ KOLEKSİYON</p>
+        <h1>URBAN<br>STREETWEAR</h1>
+        <a href="#vitrin" class="btn-hero mt-4">ALIŞVERİŞE BAŞLA</a>
+    </div>
+</section>
+
+<!-- KATEGORİ VİTRİNİ -->
+<section id="vitrin" class="container-fluid px-0">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <div class="cat-card">
+                <!-- Temsili Görsel -->
+                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070&auto=format&fit=crop" alt="T-Shirt">
+                <div class="cat-content">
+                    <div class="cat-number">01</div>
+                    <div class="cat-title">T-SHIRT</div>
+                </div>
+                <a href="kategori.php?k=T-Shirt" style="position:absolute; width:100%; height:100%; top:0; left:0; z-index:3;"></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="cat-card">
+                <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1887&auto=format&fit=crop" alt="Eşofman">
+                <div class="cat-content">
+                    <div class="cat-number">02</div>
+                    <div class="cat-title">MEN'S BASICS</div>
+                </div>
+                <a href="kategori.php?k=Eşofman Altı" style="position:absolute; width:100%; height:100%; top:0; left:0; z-index:3;"></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="cat-card">
+                <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" alt="Aksesuar">
+                <div class="cat-content">
+                    <div class="cat-number">03</div>
+                    <div class="cat-title">AKSESUAR</div>
+                </div>
+                <a href="#" style="position:absolute; width:100%; height:100%; top:0; left:0; z-index:3;"></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MARQUEE SLOGAN -->
+<div style="background:#000; color:#fff; padding:20px 0; overflow:hidden; white-space:nowrap;">
+    <div style="display:inline-block; animation: scroll 20s linear infinite;">
+        <span style="font-family:'Oswald'; font-size:40px; margin:0 50px;">FREE SHIPPING WORLDWIDE</span>
+        <span style="font-family:'Oswald'; font-size:40px; margin:0 50px;">PREMIUM QUALITY</span>
+        <span style="font-family:'Oswald'; font-size:40px; margin:0 50px;">SECURE PAYMENTS</span>
+        <span style="font-family:'Oswald'; font-size:40px; margin:0 50px;">NEW DROPS EVERY WEEK</span>
+        <span style="font-family:'Oswald'; font-size:40px; margin:0 50px;">FORSY CLOTHING</span>
+    </div>
+</div>
+<style>@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }</style>
+
+<!-- YENİ GELENLER -->
+<section class="container py-5 my-5">
+    <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
+        <div>
+            <h2 style="font-size:50px; line-height:1;">YENİ<br>GELENLER</h2>
+        </div>
+        <a href="kategori.php" class="text-decoration-underline text-uppercase fw-bold">Tümünü Gör</a>
+    </div>
+
+    <div class="row">
+        <?php while($u = $yeni_gelenler->fetch_assoc()): ?>
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="product-card" onclick="location.href='urun_detay.php?id=<?= $u['urun_id'] ?>'">
+                <div class="product-img">
+                    <!-- Resim URL Kontrolü (Dış kaynak mı yerel mi?) -->
+                    <?php 
+                    $img = $u['img_url'];
+                    if (!filter_var($img, FILTER_VALIDATE_URL)) {
+                        $img = 'gorseller/' . $img;
+                    }
+                    if (!$u['img_url']) {
+                        $img = 'https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop';
+                    }
+                    ?>
+                    <img src="<?= $img ?>" class="main-img">
+                    <img src="<?= $img ?>" class="hover-img" style="filter: brightness(0.9);">
+                </div>
+                <div class="product-info">
+                    <div class="product-title"><?= substr($u['ad'], 0, 30) ?>...</div>
+                    <div class="product-price"><?= number_format($u['fiyat'], 2) ?> ₺</div>
+                </div>
+            </div>
+        </div>
+        <?php endwhile; ?>
+    </div>
+</section>
+
+<!-- BANNER -->
+<section class="banner">
+    <div class="banner-box" data-aos="fade-left">
+        <h2 class="mb-4">STREET CULTURE</h2>
+        <p class="mb-4 text-muted">Rahat kesimler, kaliteli kumaşlar ve özgün tasarımlar. Forsy Giyim ile sokağın ritmini yakala.</p>
+        <a href="kategori.php" class="btn btn-dark rounded-0 px-4 py-3">KOLEKSİYONU İNCELE</a>
+    </div>
+</section>
+
+<!-- E-BÜLTEN & FOOTER -->
+<footer>
+    <div class="container">
+        <div class="row gy-5">
+            <div class="col-md-4">
+                <h3 class="mb-4">FORSY.</h3>
+                <p class="text-muted">Modern, minimalist ve kaliteli giyimin adresi. Tarzınızı yansıtacak parçalar burada.</p>
+                <div class="d-flex gap-3 mt-4">
+                    <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-facebook fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2 offset-md-1">
+                <h5 class="mb-4 text-white-50">ALIŞVERİŞ</h5>
+                <a href="#" class="footer-link">Yeni Gelenler</a>
+                <a href="#" class="footer-link">İndirimler</a>
+                <a href="#" class="footer-link">Çok Satanlar</a>
+                <a href="#" class="footer-link">Aksesuarlar</a>
+            </div>
+            <div class="col-md-2">
+                <h5 class="mb-4 text-white-50">KURUMSAL</h5>
+                <a href="#" class="footer-link">Hakkımızda</a>
+                <a href="#" class="footer-link">İletişim</a>
+                <a href="#" class="footer-link">Gizlilik Politikası</a>
+                <a href="#" class="footer-link">İade Koşulları</a>
+            </div>
+            <div class="col-md-3">
+                <h5 class="mb-4 text-white-50">HABERDAR OL</h5>
+                <p class="small text-muted mb-3">Yeni koleksiyonlardan ilk sen haberdar ol.</p>
+                <form class="newsletter">
+                    <input type="email" placeholder="E-posta adresiniz">
+                    <button>KAYIT OL</button>
+                </form>
+            </div>
+        </div>
+        <div class="border-top border-secondary mt-5 pt-4 text-center text-muted small">
+            &copy; 2026 FORSY GİYİM. Tüm hakları saklıdır.
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+{
+  "categories": [
+    {
+      "id": "sicak",
+      "name": "Sıcak İçecekler",
+      "image": "https://cdn.pixabay.com/photo/2021/03/06/17/16/turkish-coffee-6074213_1280.jpg",
+      "items": [
+        {
+          "id": 1,
+          "name": "Çay",
+          "description": "Geleneksel ince belli bardakta taze demlenmiş çay.",
+          "price": "35 ₺",
+          "image": "https://images.unsplash.com/photo-1576092770280-92fb9c3d4ca9?w=800&q=80"
+        },
+        {
+          "id": 2,
+          "name": "Türk Kahvesi",
+          "description": "Közde pişirilmiş bol köpüklü Türk kahvesi. Lokum ile servis edilir.",
+          "price": "90 ₺",
+          "image": "https://cdn.pixabay.com/photo/2021/03/06/17/16/turkish-coffee-6074213_1280.jpg"
+        },
+        {
+          "id": 3,
+          "name": "Caffe Latte",
+          "description": "Espresso ve ipeksi süt köpüğünün mükemmel uyumu.",
+          "price": "120 ₺",
+          "image": "https://images.unsplash.com/photo-1555560940-bf7962762B5b?w=800&q=80"
+        },
+        {
+          "id": 4,
+          "name": "Cappuccino",
+          "description": "Eşit oranda espresso, sıcak süt ve süt köpüğü.",
+          "price": "120 ₺",
+          "image": "https://images.unsplash.com/photo-1572442388796-11668a67e569?w=800&q=80"
+        },
+        {
+          "id": 5,
+          "name": "Sıcak Çikolata",
+          "description": "Yoğun kakao lezzeti, marshmallow ve krema ile.",
+          "price": "130 ₺",
+          "image": "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=800&q=80"
+        }
+      ]
+    },
+    {
+      "id": "soguk",
+      "name": "Soğuk İçecekler",
+      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=1000&q=80",
+      "items": [
+        {
+          "id": 6,
+          "name": "Iced Latte",
+          "description": "Buzlu sütün espresso ile soğuk buluşması.",
+          "price": "130 ₺",
+          "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=800&q=80"
+        },
+        {
+          "id": 7,
+          "name": "Ev Yapımı Limonata",
+          "description": "Taze nane ve limon dilimleri ile ferahlatıcı lezzet.",
+          "price": "110 ₺",
+          "image": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&q=80"
+        },
+        {
+          "id": 8,
+          "name": "Churchill",
+          "description": "Soda, limon suyu ve tuzun ferahlatıcı karışımı.",
+          "price": "95 ₺",
+          "image": "https://images.unsplash.com/photo-1472586662442-3eec04b9dbda?w=800&q=80"
+        },
+        {
+          "id": 9,
+          "name": "Berry Smoothie",
+          "description": "Orman meyveleri, yoğurt ve buz.",
+          "price": "140 ₺",
+          "image": "https://images.unsplash.com/photo-1623869634636-3b3d3953531b?w=800&q=80"
+        },
+        {
+          "id": 14,
+          "name": "Su (33cl)",
+          "description": "Cam şişe su.",
+          "price": "25 ₺",
+          "image": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=800&q=80"
+        },
+        {
+          "id": 15,
+          "name": "Maden Suyu",
+          "description": "Doğal mineralli maden suyu.",
+          "price": "35 ₺",
+          "image": "https://images.unsplash.com/photo-1603394630850-69b3ca8121ca?w=800&q=80"
+        }
+      ]
+    },
+    {
+      "id": "tatlilar",
+      "name": "Tatlılar",
+      "image": "https://images.unsplash.com/photo-1551024601-569d6f461287?w=1000&q=80",
+      "items": [
+        {
+          "id": 10,
+          "name": "San Sebastian",
+          "description": "Akışkan kıvamlı, üzeri yanık efsane lezzet. Çikolata sos ile.",
+          "price": "180 ₺",
+          "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&q=80"
+        },
+        {
+          "id": 11,
+          "name": "Tiramisu",
+          "description": "Mascarpone peyniri ve espresso ile hazırlanan İtalyan klasiği.",
+          "price": "160 ₺",
+          "image": "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=800&q=80"
+        },
+        {
+          "id": 12,
+          "name": "Brownie",
+          "description": "Belçika çikolatalı, cevizli sıcak brownie. Dondurma ile.",
+          "price": "170 ₺",
+          "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&q=80"
+        },
+        {
+          "id": 13,
+          "name": "Magnolia",
+          "description": "Çilek ve bebe bisküvisi ile hazırlanan hafif puding.",
+          "price": "150 ₺",
+          "image": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800&q=80"
+        },
+        {
+          "id": 16,
+          "name": "Limonlu Cheesecake",
+          "description": "Taze limon soslu, yoğun peynir dolgulu cheesecake.",
+          "price": "165 ₺",
+          "image": "https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=800&q=80"
+        }
+      ]
+    }
+  ]
+}
