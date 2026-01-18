@@ -346,16 +346,16 @@
     <section class="contact" id="contact">
         <h2 class="heading">İletişime <span>Geç!</span></h2>
 
-        <form action="#">
+        <form action="https://formspree.io/f/xojjezby" method="POST">
             <div class="input-box">
-                <input type="text" placeholder="Adınız Soyadınız">
-                <input type="email" placeholder="Email Adresiniz">
+                <input type="text" name="name" placeholder="Adınız Soyadınız" required>
+                <input type="email" name="email" placeholder="Email Adresiniz" required>
             </div>
             <div class="input-box">
-                <input type="number" placeholder="Telefon Numaranız">
-                <input type="text" placeholder="Konu">
+                <input type="number" name="phone" placeholder="Telefon Numaranız">
+                <input type="text" name="subject" placeholder="Konu">
             </div>
-            <textarea name="" id="" cols="30" rows="10" placeholder="Mesajınız"></textarea>
+            <textarea name="message" id="" cols="30" rows="10" placeholder="Mesajınız" required></textarea>
             <input type="submit" value="Mesaj Gönder" class="btn">
         </form>
     </section>
