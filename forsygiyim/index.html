@@ -366,7 +366,7 @@
                 <div class="cat-card">
                     <!-- Temsili Görsel -->
                     <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070&auto=format&fit=crop"
-                        alt="T-Shirt">
+                        alt="T-Shirt" loading="lazy">
                     <div class="cat-content">
                         <div class="cat-number">01</div>
                         <div class="cat-title">T-SHIRT</div>
@@ -378,7 +378,7 @@
             <div class="col-md-4">
                 <div class="cat-card">
                     <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1887&auto=format&fit=crop"
-                        alt="Eşofman">
+                        alt="Eşofman" loading="lazy">
                     <div class="cat-content">
                         <div class="cat-number">02</div>
                         <div class="cat-title">MEN'S BASICS</div>
@@ -390,7 +390,7 @@
             <div class="col-md-4">
                 <div class="cat-card">
                     <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
-                        alt="Aksesuar">
+                        alt="Aksesuar" loading="lazy">
                     <div class="cat-content">
                         <div class="cat-number">03</div>
                         <div class="cat-title">AKSESUAR</div>
@@ -531,7 +531,7 @@
             div.innerHTML = `
             <div class="product-card" onclick="location.href='urun_detay.html?id=${product.id}'">
                 <div class="product-img">
-                    <img src="${product.image}" class="main-img" onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop'">
+                    <img src="${product.image}" class="main-img" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop'">
                 </div>
                 <div class="product-info">
                     <div class="product-title">${product.name.substring(0, 30)}...</div>

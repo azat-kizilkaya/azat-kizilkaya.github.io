@@ -20,12 +20,17 @@
             --gray: #f4f4f4;
         }
 
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             background: #fff;
             color: #111;
-            overflow-x: hidden;
             width: 100%;
         }
 
@@ -316,7 +321,7 @@
 
                 div.innerHTML = `
                 <div class="cat-img-wrap">
-                    <img src="${u.image}" alt="${u.name}" onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop'">
+                    <img src="${u.image}" alt="${u.name}" loading="lazy" decoding="async" onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop'">
                 </div>
                 <div class="cat-info">
                     <div class="cat-title">${u.name}</div>
