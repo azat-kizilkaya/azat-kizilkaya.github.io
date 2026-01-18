@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÜRÜN DETAY | FORSY GİYİM</title>
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --accent: #E84D35;
+            --dark: #050505;
+            --gray: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+            background: #fff;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .product-gallery {
+            background: #f8f8f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .product-main-img {
+            max-width: 80%;
+            max-height: 80vh;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
+            transition: 0.3s opacity;
+        }
+
+        .product-info {
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .product-cat {
+            color: #888;
+            font-size: 14px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .product-title {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .product-price {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            font-family: 'Oswald';
+        }
+
+        .size-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .size-item {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .size-item:hover,
+        .size-item.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .color-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .color-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #eee;
+            position: relative;
+        }
+
+        .color-circle.active {
+            border-color: #000;
+            transform: scale(1.1);
+        }
+
+        .btn-add-cart {
+            background: #000;
+            color: #fff;
+            width: 100%;
+            padding: 20px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-add-cart:hover {
+            background: #333;
+            transform: translateY(-5px);
+        }
+
+        /* Navbar fix */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            border-bottom: 1px solid #eee;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 99;
+        }
+
+        .nav-link {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 14px;
+            margin: 0 15px;
+            position: relative;
+        }
+
+        @media(max-width: 768px) {
+            .product-gallery {
+                min-height: 50vh;
+                margin-top: 80px;
+            }
+
+            .product-info {
+                padding: 30px;
+                min-height: auto;
+            }
+
+            .product-title {
+                font-size: 32px;
+            }
+
+            .navbar {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Minimal Navbar for Detail Page -->
+    <nav class="navbar fixed-top">
+        <div class="d-flex align-items-center">
+            <a href="index.html" class="brand"
+                style="font-family:'Oswald';font-weight:900;letter-spacing:-1px;font-size:24px;color:#000;">FORSY<span
+                    style="color:var(--accent)">.</span></a>
+        </div>
+        <div class="d-flex align-items-center gap-4">
+            <a href="sepet.html" class="position-relative text-black">
+                <i class="fa fa-shopping-bag fa-lg"></i>
+                <span id="cart-count"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="font-size:10px;">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="row g-0">
+        <div class="col-lg-7 product-gallery">
+            <a href="index.html" class="position-absolute top-0 start-0 m-4 text-dark fs-4"
+                style="z-index: 20; margin-top: 100px !important;"><i class="fa fa-arrow-left"></i></a>
+
+            <img src="" class="product-main-img" id="mainImage" data-aos="zoom-in"
+                onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop'">
+        </div>
+
+        <div class="col-lg-5">
+            <div class="product-info" data-aos="fade-left">
+                <div class="product-cat">FORSY KOLEKSİYON // <span id="p-cat">...</span></div>
+                <h1 class="product-title" id="p-name">Ürün Yükleniyor</h1>
+                <div class="product-price" id="p-price">...</div>
+
+                <p class="text-secondary mb-5" style="line-height: 1.8;">
+                    Bu özel tasarım parça, modern sokak modasının ruhunu yansıtıyor. Premium kumaş kalitesi ve rahat
+                    kesimiyle günlük stilinizin vazgeçilmezi olacak.
+                </p>
+
+                <div class="mb-4">
+                    <label class="small text-muted fw-bold mb-2">BEDEN SEÇİNİZ</label>
+                    <div class="size-box">
+                        <div class="size-item" onclick="selectSize(this, 'S')">S</div>
+                        <div class="size-item" onclick="selectSize(this, 'M')">M</div>
+                        <div class="size-item" onclick="selectSize(this, 'L')">L</div>
+                        <div class="size-item" onclick="selectSize(this, 'XL')">XL</div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="small text-muted fw-bold mb-2">RENK: <span id="selectedColorText"
+                            class="text-dark">Standart</span></label>
+                    <div class="color-selector">
+                        <div class="color-circle active" style="background: #000;" onclick="selectColor(this, 'Siyah')">
+                        </div>
+                        <div class="color-circle" style="background: #f4f4f4;" onclick="selectColor(this, 'Beyaz')">
+                        </div>
+                        <div class="color-circle" style="background: #234f1e;" onclick="selectColor(this, 'Yeşil')">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-add-cart" id="addToCartBtn">SEPETE EKLE</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="assets/js/data.js"></script>
+
+    <script>
+        AOS.init();
+
+        // Get Product ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = parseInt(urlParams.get('id'));
+        const product = products.find(p => p.id === id);
+
+        if (!product) {
+            document.querySelector('.product-info').innerHTML = '<h2>Ürün Bulunamadı</h2><a href="index.html">Ana Sayfaya Dön</a>';
+        } else {
+            document.title = product.name + " | FORSY";
+            document.getElementById('p-cat').innerText = product.category.toUpperCase();
+            document.getElementById('p-name').innerText = product.name;
+            document.getElementById('p-price').innerText = formatCurrency(product.price);
+            document.getElementById('mainImage').src = product.image;
+        }
+
+        let selectedSize = '';
+        let selectedColor = 'Siyah'; // Default
+
+        function selectSize(el, size) {
+            jQuery('.size-item').removeClass('active');
+            jQuery(el).addClass('active');
+            selectedSize = size;
+        }
+
+        function selectColor(el, color) {
+            jQuery('.color-circle').removeClass('active');
+            jQuery(el).addClass('active');
+            selectedColor = color;
+            document.getElementById('selectedColorText').innerText = color;
+        }
+
+        document.getElementById('addToCartBtn').onclick = function () {
+            if (!selectedSize) {
+                toastr.warning('Lütfen bir beden seçiniz.');
+                return;
+            }
+
+            const cartItem = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                size: selectedSize,
+                color: selectedColor,
+                quantity: 1
+            };
+
+            // Add to LocalStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Check if same item exists
+            const existingItemIndex = cart.findIndex(item => item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                cart.push(cartItem);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            toastr.success('Ürün sepete eklendi!');
+            updateCartCount();
+        };
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalItems;
+        }
+        updateCartCount();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEPET | FORSY STUDIO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@400;700&display=swap');
+
+        :root {
+            --accent: #E84D35;
+            --dark-bg: #050505;
+            --panel: #111;
+            --border: #222;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            padding-top: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Syncopate', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cart-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .cart-item {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.3s;
+        }
+
+        .item-img-box {
+            width: 100px;
+            height: 120px;
+            background: #222;
+            flex-shrink: 0;
+        }
+
+        .item-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+
+        .item-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: block;
+            text-decoration: none;
+        }
+
+        .item-meta {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .item-price {
+            font-family: 'Syncopate';
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .qty-box {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border: 1px solid var(--border);
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+
+        .qty-val {
+            width: 40px;
+            text-align: center;
+        }
+
+        .summary-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 40px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #aaa;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Syncopate';
+        }
+
+        .btn-checkout {
+            background: #fff;
+            color: #000;
+            width: 100%;
+            padding: 20px;
+            border: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-family: 'Syncopate';
+            margin-top: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-checkout:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+
+        .btn-remove:hover {
+            color: #fe2a2a;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            border-bottom: 1px solid #333;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Oswald';
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="brand">FORSY<span style="color:var(--accent)">.</span></a>
+        <a href="index.html" class="text-white"><i class="fa fa-times fa-lg"></i></a>
+    </nav>
+
+    <div class="cart-container">
+        <div class="row">
+            <div class="col-lg-8" id="cart-items-container">
+                <!-- JS will populate -->
+            </div>
+
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h3 class="mb-4">SİPARİŞ ÖZETİ</h3>
+                    <div class="summary-row">
+                        <span>ARA TOPLAM</span>
+                        <span id="subtotal">0.00 TL</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>KARGO</span>
+                        <span class="text-white">ÜCRETSİZ</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>TOPLAM</span>
+                        <span id="total">0.00 TL</span>
+                    </div>
+                    <button class="btn-checkout" onclick="checkout()">ÖDEMEYE GEÇ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/data.js"></script>
+    <script>
+        // Load Cart
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const container = document.getElementById('cart-items-container');
+
+        function renderCart() {
+            container.innerHTML = '';
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="text-center py-5"><h3>SEPETİNİZ BOŞ</h3><a href="index.html" class="text-white text-decoration-underline">Alışverişe Başla</a></div>';
+            }
+
+            cart.forEach((item, index) => {
+                subtotal += item.price * item.quantity;
+
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                <div class="d-flex w-100 align-items-center">
+                    <div class="item-img-box">
+                        <img src="\${item.image}" alt="" onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop'">
+                    </div>
+                    <div class="item-details">
+                        <a href="urun_detay.html?id=\${item.id}" class="item-title">\${item.name}</a>
+                        <div class="item-meta">\${item.color || 'Standart'} // \${item.size || 'Standart'}</div>
+                        <div class="item-price">\${formatCurrency(item.price)}</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="qty-box">
+                            <button class="qty-btn" onclick="updateQty(\${index}, -1)">-</button>
+                            <div class="qty-val">\${item.quantity}</div>
+                            <button class="qty-btn" onclick="updateQty(\${index}, 1)">+</button>
+                        </div>
+                        <button class="btn-remove" onclick="removeItem(\${index})"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+            `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('subtotal').innerText = formatCurrency(subtotal);
+            document.getElementById('total').innerText = formatCurrency(subtotal);
+        }
+
+        function updateQty(index, change) {
+            if (cart[index].quantity + change < 1) return;
+            cart[index].quantity += change;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                Swal.fire('Sepet Boş', 'Lütfen önce ürün ekleyin.', 'warning');
+                return;
+            }
+            Swal.fire({
+                title: 'Sipariş Alındı!',
+                text: 'Bu bir demo projesidir. Ödeme işlemi simüle edilmiştir.',
+                icon: 'success',
+                confirmButtonColor: '#E84D35'
+            }).then(() => {
+                localStorage.removeItem('cart');
+                window.location.href = 'index.html';
+            });
+        }
+
+        renderCart();
+    </script>
+</body>
+
+</html>
