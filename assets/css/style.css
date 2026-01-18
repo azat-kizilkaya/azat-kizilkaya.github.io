@@ -40,6 +40,9 @@ body {
     background: var(--bg-color);
     color: var(--text-color);
     transition: background 0.3s, color 0.3s;
+    overflow-x: hidden;
+    /* Fix for horizontal scroll/shrinking */
+    width: 100%;
 }
 
 #particles-js {
@@ -1011,7 +1014,8 @@ body.show-chatbot .chatbot {
 @media (max-width: 490px) {
     .chatbot-toggler {
         right: 20px;
-        bottom: 20px;
+        bottom: 90px;
+        /* Consistent with 768px fix */
     }
 
     .chatbot {
@@ -1143,6 +1147,17 @@ body.show-chatbot .chatbot {
     .portfolio-container,
     .blog-container {
         grid-template-columns: 1fr;
+    }
+
+    /* Fix Overlap with Dock Menu on Mobile */
+    .floating-theme-toggle {
+        bottom: 90px;
+        /* Raise above dock */
+    }
+
+    .chatbot-toggler {
+        bottom: 90px;
+        /* Raise above dock */
     }
 }
 
