@@ -41,6 +41,7 @@
             background: #f8f8f8;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
@@ -48,10 +49,36 @@
 
         .product-main-img {
             max-width: 80%;
-            max-height: 80vh;
+            max-height: 70vh;
             object-fit: contain;
             filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
             transition: 0.3s opacity;
+            margin-bottom: 20px;
+        }
+
+        /* Thumbnails */
+        .thumb-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            overflow-x: auto;
+            max-width: 90%;
+            padding: 10px;
+        }
+
+        .thumb-img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .thumb-img:hover,
+        .thumb-img.active {
+            border-color: #000;
+            transform: scale(1.05);
         }
 
         .product-info {
@@ -127,6 +154,7 @@
         .color-circle.active {
             border-color: #000;
             transform: scale(1.1);
+            box-shadow: 0 0 0 3px #fff, 0 0 0 5px #000;
         }
 
         .btn-add-cart {
@@ -170,6 +198,7 @@
             .product-gallery {
                 min-height: 50vh;
                 margin-top: 80px;
+                padding: 20px;
             }
 
             .product-info {
@@ -214,6 +243,11 @@
 
             <img src="" class="product-main-img" id="mainImage" data-aos="zoom-in"
                 onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop'">
+
+            <!-- Thumbnails Container -->
+            <div class="thumb-box" id="gallery-thumbs">
+                <!-- JS will populate -->
+            </div>
         </div>
 
         <div class="col-lg-5">
@@ -240,13 +274,8 @@
                 <div class="mb-5">
                     <label class="small text-muted fw-bold mb-2">RENK: <span id="selectedColorText"
                             class="text-dark">Standart</span></label>
-                    <div class="color-selector">
-                        <div class="color-circle active" style="background: #000;" onclick="selectColor(this, 'Siyah')">
-                        </div>
-                        <div class="color-circle" style="background: #f4f4f4;" onclick="selectColor(this, 'Beyaz')">
-                        </div>
-                        <div class="color-circle" style="background: #234f1e;" onclick="selectColor(this, 'Yeşil')">
-                        </div>
+                    <div class="color-selector" id="color-container">
+                        <!-- JS will populate -->
                     </div>
                 </div>
 
@@ -264,10 +293,14 @@
     <script>
         AOS.init();
 
-        // Get Product ID from URL
+        // Get Product ID
         const urlParams = new URLSearchParams(window.location.search);
         const id = parseInt(urlParams.get('id'));
         const product = products.find(p => p.id === id);
+
+        let selectedSize = '';
+        let selectedColor = '';
+        let selectedImage = ''; // For checkout
 
         if (!product) {
             document.querySelector('.product-info').innerHTML = '<h2>Ürün Bulunamadı</h2><a href="index.html">Ana Sayfaya Dön</a>';
@@ -276,23 +309,81 @@
             document.getElementById('p-cat').innerText = product.category.toUpperCase();
             document.getElementById('p-name').innerText = product.name;
             document.getElementById('p-price').innerText = formatCurrency(product.price);
-            document.getElementById('mainImage').src = product.image;
+
+            // Initial Image (Default)
+            const initialImg = product.image;
+            document.getElementById('mainImage').src = initialImg;
+            selectedImage = initialImg;
+
+            // Populate Colors
+            const colorContainer = document.getElementById('color-container');
+            if (product.colors && product.colors.length > 0) {
+
+                // Auto Select First Color
+                selectedColor = product.colors[0].name;
+                document.getElementById('selectedColorText').innerText = selectedColor;
+
+                // Load Gallery for First Color
+                loadGallery(product.colors[0]);
+
+                product.colors.forEach((c, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'color-circle ' + (index === 0 ? 'active' : '');
+                    div.style.backgroundColor = c.hex;
+                    div.onclick = function () {
+                        // Update Active State
+                        document.querySelectorAll('.color-circle').forEach(el => el.classList.remove('active'));
+                        div.classList.add('active');
+
+                        // Update Text
+                        selectedColor = c.name;
+                        document.getElementById('selectedColorText').innerText = c.name;
+
+                        // Update Gallery
+                        loadGallery(c);
+                    };
+                    colorContainer.appendChild(div);
+                });
+            } else {
+                // No colors defined
+                colorContainer.innerHTML = '<div class="text-muted">Standart</div>';
+                loadGallery({ images: [product.image] });
+            }
         }
 
-        let selectedSize = '';
-        let selectedColor = 'Siyah'; // Default
+        function loadGallery(colorObj) {
+            const thumbContainer = document.getElementById('gallery-thumbs');
+            thumbContainer.innerHTML = '';
+            const mainImg = document.getElementById('mainImage');
+
+            // Use color specific images or fallback to main product image
+            const images = colorObj.images && colorObj.images.length > 0 ? colorObj.images : [product.image];
+
+            // Update Main Image to first in list
+            mainImg.src = images[0];
+            selectedImage = images[0]; // for cart
+
+            // Create Thumbs
+            images.forEach((imgSrc, idx) => {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.className = 'thumb-img ' + (idx === 0 ? 'active' : '');
+                img.onclick = function () {
+                    // Change Main Image
+                    mainImg.src = imgSrc;
+                    selectedImage = imgSrc;
+                    // Update active thumb
+                    document.querySelectorAll('.thumb-img').forEach(el => el.classList.remove('active'));
+                    img.classList.add('active');
+                };
+                thumbContainer.appendChild(img);
+            });
+        }
 
         function selectSize(el, size) {
             jQuery('.size-item').removeClass('active');
             jQuery(el).addClass('active');
             selectedSize = size;
-        }
-
-        function selectColor(el, color) {
-            jQuery('.color-circle').removeClass('active');
-            jQuery(el).addClass('active');
-            selectedColor = color;
-            document.getElementById('selectedColorText').innerText = color;
         }
 
         document.getElementById('addToCartBtn').onclick = function () {
@@ -305,16 +396,13 @@
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                image: product.image,
+                image: selectedImage, // Use the currently viewed image
                 size: selectedSize,
-                color: selectedColor,
+                color: selectedColor || 'Standart',
                 quantity: 1
             };
 
-            // Add to LocalStorage
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-            // Check if same item exists
             const existingItemIndex = cart.findIndex(item => item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color);
 
             if (existingItemIndex > -1) {
@@ -324,7 +412,6 @@
             }
 
             localStorage.setItem('cart', JSON.stringify(cart));
-
             toastr.success('Ürün sepete eklendi!');
             updateCartCount();
         };
